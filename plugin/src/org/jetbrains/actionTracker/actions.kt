@@ -12,7 +12,7 @@ import javax.swing.JDialog
  * @author nik
  */
 
-interface ActionData {}
+interface ActionData
 
 class ActionRecord(val timestamp: Long, val action: ActionData)
 
@@ -34,7 +34,7 @@ class KeyStrokePressed(val keyStroke: KeyStroke): ActionData {
 
 class NextTask: ActionData {}
 
-public fun ActionData.toPresentableText(): String = when (this) {
+fun ActionData.toPresentableText(): String = when (this) {
     is CharTyped -> "typed '$char'"
     is MouseClicked -> "mouse clicked${if (dialogTitle != null) " (in '$dialogTitle' dialog)" else ""}"
     is KeyStrokePressed -> getKeystrokeText()

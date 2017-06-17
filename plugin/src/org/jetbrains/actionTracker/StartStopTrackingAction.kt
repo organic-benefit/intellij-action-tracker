@@ -6,7 +6,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 /**
  * @author nik
  */
-public class StartStopTrackingAction : DumbAwareAction("Start/Stop Tracking") {
+class StartStopTrackingAction : DumbAwareAction("Start/Stop Tracking") {
     override fun actionPerformed(e: AnActionEvent) {
         val service = e.getProject()?.getActionTrackingService()
         if (service == null) {

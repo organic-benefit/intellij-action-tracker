@@ -51,9 +51,9 @@ import com.intellij.ui.SearchTextField
 /**
  * @author nik
  */
-fun Project.getActionTrackingService() : ActionTrackingService = ServiceManager.getService(this, javaClass())
+fun Project.getActionTrackingService() : ActionTrackingService = ServiceManager.getService(this, ActionTrackingServiceHelper.getServiceClass())
 
-public class ActionTrackingService(private val project: Project) {
+class ActionTrackingService(private val project: Project) {
     var activeTracker: ActionTracker? = null
       private set
 
@@ -92,7 +92,7 @@ private val textEditingEvents = setOf(KeyEvent.VK_DELETE, KeyEvent.VK_BACK_SPACE
 private fun isContextSensitiveAction(e: KeyEvent) = e.getKeyCode() in contextSensitiveEvents
 
 private inline fun <reified T: Any> Any.getFieldOfType(): T? {
-    val type = javaClass<T>()
+    val type = javaClass
     val field = javaClass.getDeclaredFields().first { type.isAssignableFrom(it.getType()) }
     field.setAccessible(true)
     return field?.get(this) as? T
@@ -130,7 +130,7 @@ private fun getSelectedItem(component: Component?, project: Project, textEditing
                 return searchTextField.getText()
             }
         }
-        val list = searchEverywhere.getFieldOfType<JBList>()
+        val list = searchEverywhere.getFieldOfType<JBList<*>>()
         if (list != null) {
             return list.getSelectedValue()?.toString()
         }
@@ -185,7 +185,7 @@ class ActionTracker(private val project: Project): Disposable {
     override fun dispose() {
     }
 
-    public fun startNextTask() {
+    fun startNextTask() {
         addRecord(NextTask())
     }
 
@@ -196,7 +196,7 @@ class ActionTracker(private val project: Project): Disposable {
 
     fun start() {
         ActionManager.getInstance().addAnActionListener(object : AnActionListener.Adapter() {
-            public override fun beforeActionPerformed(action: AnAction, dataContext: DataContext, event: AnActionEvent) {
+            override fun beforeActionPerformed(action: AnAction, dataContext: DataContext, event: AnActionEvent) {
                 val input = event.getInputEvent()
                 if (actionInputEvents.size > 100) actionInputEvents.clear()
                 actionInputEvents.add(input)
@@ -215,7 +215,7 @@ class ActionTracker(private val project: Project): Disposable {
             }
         }, this)
         IdeEventQueue.getInstance().addDispatcher(object : EventDispatcher {
-            public override fun dispatch(e: AWTEvent?): Boolean {
+            override fun dispatch(e: AWTEvent): Boolean {
                 val selection = if (e is MouseEvent && e.getID() == MouseEvent.MOUSE_CLICKED) {
                     getSelectedItem(e.getComponent(), project, false)
                 }
@@ -232,7 +232,7 @@ class ActionTracker(private val project: Project): Disposable {
             }
         }, this)
         IdeEventQueue.getInstance().addPostprocessor(object : EventDispatcher {
-            public override fun dispatch(e: AWTEvent?): Boolean {
+            override fun dispatch(e: AWTEvent): Boolean {
                 if (e is MouseEvent && e.getID() == MouseEvent.MOUSE_CLICKED) {
                     processMouseClickedEvent(e)
                 }
@@ -269,7 +269,7 @@ class ActionTracker(private val project: Project): Disposable {
             return
         }
         if (e.getKeyCode() in setOf(KeyEvent.VK_CONTROL, KeyEvent.VK_ALT, KeyEvent.VK_META, KeyEvent.VK_SHIFT)) {
-            return;
+            return
         }
         if (!IdeEventQueue.getInstance().getKeyEventDispatcher().isReady()) {
             return
@@ -288,7 +288,7 @@ class ActionTracker(private val project: Project): Disposable {
         }
     }
 
-    public fun exportRecords(): String {
+    fun exportRecords(): String {
         val lines = arrayListOf("Tracking started: ${getStartTrackingTime()}.")
         val formatter = SimpleDateFormat("HH:mm:ss.SSS")
         actionRecords.mapTo(lines) {
@@ -298,7 +298,7 @@ class ActionTracker(private val project: Project): Disposable {
         return lines.joinToString("\n")
     }
 
-    public fun getStartTrackingTime(): String {
+    fun getStartTrackingTime(): String {
         return SimpleDateFormat("dd.MM.yyyy, HH:mm").format(Date(startTime))
     }
 }
