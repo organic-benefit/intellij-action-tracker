@@ -8,7 +8,6 @@
             <element id="archive" name="action-tracker.jar">
               <element id="module-output" name="plugin" />
             </element>
-            <element id="library" level="project" name="KotlinJavaRuntime" />
           </element>
         </element>
       </element>
