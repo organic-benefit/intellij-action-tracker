@@ -71,7 +71,7 @@ public class ActionTrackingService(private val project: Project) {
             Disposer.dispose(tracker)
             activeTracker = null
             val productPrefix = ApplicationNamesInfo.getInstance().getFullProductName().replace(' ', '_')
-            val time = tracker.getStartTrackingTime().replaceAll("[\\.,: ]", "_")
+            val time = tracker.getStartTrackingTime().replace("[\\.,: ]", "_")
             val file = File(SystemProperties.getUserHome(), "${productPrefix}_action_tracker_$time.txt")
             file.writeText(records)
             val message = "Actions log saved to <a href=\"file\">${file.getAbsolutePath()}</a>"
@@ -144,7 +144,7 @@ private fun getSelectedItem(component: Component?, project: Project, textEditing
             is JTextComponent -> return cur.getText()
             is SimpleColoredComponent -> return cur.getCharSequence(true).toString()
             is JTree -> return cur.getSelectionPath()?.getLastPathComponent().toString()
-            is JList -> return cur.getSelectedValue().toString()
+            is JList<*> -> return cur.getSelectedValue().toString()
             is TreeTable -> return cur.getTree().getSelectionPath()?.getLastPathComponent().toString()
             is JTable -> {
                 val row = cur.getSelectedRow()
@@ -153,7 +153,8 @@ private fun getSelectedItem(component: Component?, project: Project, textEditing
                 return (0..cur.getColumnCount()-1).map { (cur.getValueAt(row, it) as Any?).toString() }.joinToString(", ")
             }
         }
-        val next = cur.getParent()
+
+        val next = cur?.getParent()
         if (next == null) {
             return null
         }
@@ -197,7 +198,7 @@ class ActionTracker(private val project: Project): Disposable {
         ActionManager.getInstance().addAnActionListener(object : AnActionListener.Adapter() {
             public override fun beforeActionPerformed(action: AnAction, dataContext: DataContext, event: AnActionEvent) {
                 val input = event.getInputEvent()
-                if (actionInputEvents.size() > 100) actionInputEvents.clear()
+                if (actionInputEvents.size > 100) actionInputEvents.clear()
                 actionInputEvents.add(input)
                 val source = when (input) {
                     is MouseEvent -> MouseClicked(input)
@@ -224,7 +225,7 @@ class ActionTracker(private val project: Project): Disposable {
                 else null
 
                 if (selection != null && e is InputEvent) {
-                    if (actionContexts.size() > 100) actionContexts.clear()
+                    if (actionContexts.size > 100) actionContexts.clear()
                     actionContexts.put(e, selection)
                 }
                 return false

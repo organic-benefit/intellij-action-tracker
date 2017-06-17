@@ -11,10 +11,10 @@ import javax.swing.JDialog
 /**
  * @author nik
  */
-class ActionRecord(val timestamp: Long, val action: ActionData)
 
-trait ActionData {
-}
+interface ActionData {}
+
+class ActionRecord(val timestamp: Long, val action: ActionData)
 
 class CharTyped(val char: Char): ActionData {}
 

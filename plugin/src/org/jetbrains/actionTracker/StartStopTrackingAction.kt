@@ -8,11 +8,12 @@ import com.intellij.openapi.actionSystem.AnActionEvent
  */
 public class StartStopTrackingAction : DumbAwareAction("Start/Stop Tracking") {
     override fun actionPerformed(e: AnActionEvent) {
-        val service = e.getProject().getActionTrackingService()
-        if (service.activeTracker != null) {
+        val service = e.getProject()?.getActionTrackingService()
+        if (service == null) {
+            return;
+        } else if (service.activeTracker != null) {
             service.stopTracking()
-        }
-        else {
+        } else {
             service.startTracking()
         }
     }
