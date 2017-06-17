@@ -51,7 +51,7 @@ import com.intellij.ui.SearchTextField
 /**
  * @author nik
  */
-fun Project.getActionTrackingService() : ActionTrackingService = ServiceManager.getService(this, ActionTrackingServiceHelper.getServiceClass())
+fun Project.getActionTrackingService() : ActionTrackingService = ServiceManager.getService(this, ActionTrackingService::class.java)
 
 class ActionTrackingService(private val project: Project) {
     var activeTracker: ActionTracker? = null
@@ -71,7 +71,7 @@ class ActionTrackingService(private val project: Project) {
             Disposer.dispose(tracker)
             activeTracker = null
             val productPrefix = ApplicationNamesInfo.getInstance().getFullProductName().replace(' ', '_')
-            val time = tracker.getStartTrackingTime().replace("[\\.,: ]", "_")
+            val time = tracker.getStartTrackingTime().replace("[\\.,: ]", "_", false)
             val file = File(SystemProperties.getUserHome(), "${productPrefix}_action_tracker_$time.txt")
             file.writeText(records)
             val message = "Actions log saved to <a href=\"file\">${file.getAbsolutePath()}</a>"
@@ -92,8 +92,8 @@ private val textEditingEvents = setOf(KeyEvent.VK_DELETE, KeyEvent.VK_BACK_SPACE
 private fun isContextSensitiveAction(e: KeyEvent) = e.getKeyCode() in contextSensitiveEvents
 
 private inline fun <reified T: Any> Any.getFieldOfType(): T? {
-    val type = javaClass
-    val field = javaClass.getDeclaredFields().first { type.isAssignableFrom(it.getType()) }
+    val type = T::class.java
+    val field = this::class.java.getDeclaredFields().first { type.isAssignableFrom(it.getType()) }
     field.setAccessible(true)
     return field?.get(this) as? T
 }
