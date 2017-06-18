@@ -51,11 +51,11 @@ import com.intellij.ui.SearchTextField
 /**
  * @author nik
  */
-fun Project.getActionTrackingService() : ActionTrackingService = ServiceManager.getService(this, ActionTrackingService::class.java)
+fun Project.getActionTrackingService(): ActionTrackingService = ServiceManager.getService(this, ActionTrackingService::class.java)
 
 class ActionTrackingService(private val project: Project) {
     var activeTracker: ActionTracker? = null
-      private set
+        private set
 
     fun startTracking() {
         val tracker = ActionTracker(project)
@@ -91,7 +91,7 @@ private val textEditingEvents = setOf(KeyEvent.VK_DELETE, KeyEvent.VK_BACK_SPACE
 
 private fun isContextSensitiveAction(e: KeyEvent) = e.getKeyCode() in contextSensitiveEvents
 
-private inline fun <reified T: Any> Any.getFieldOfType(): T? {
+private inline fun <reified T : Any> Any.getFieldOfType(): T? {
     val type = T::class.java
     val field = this::class.java.getDeclaredFields().first { type.isAssignableFrom(it.getType()) }
     field.setAccessible(true)
@@ -150,7 +150,7 @@ private fun getSelectedItem(component: Component?, project: Project, textEditing
                 val row = cur.getSelectedRow()
                 if (row < 0) return null
                 //todo report Kotlin bug
-                return (0..cur.getColumnCount()-1).map { (cur.getValueAt(row, it) as Any?).toString() }.joinToString(", ")
+                return (0..cur.getColumnCount() - 1).map { (cur.getValueAt(row, it) as Any?).toString() }.joinToString(", ")
             }
         }
 
@@ -176,7 +176,7 @@ fun getLocalActionText(action: AnAction): String? {
 }
 
 
-class ActionTracker(private val project: Project): Disposable {
+class ActionTracker(private val project: Project) : Disposable {
     private val actionInputEvents = HashSet<InputEvent>()
     private val actionContexts = HashMap<InputEvent, String>()
     private val actionRecords = ArrayList<ActionRecord>()
@@ -191,7 +191,7 @@ class ActionTracker(private val project: Project): Disposable {
 
     private fun addRecord(actionData: ActionData) {
         actionRecords.add(ActionRecord(System.currentTimeMillis(), actionData))
-//        println(actionData.toPresentableText())
+        //println(actionData.toPresentableText())
     }
 
     fun start() {
@@ -218,11 +218,9 @@ class ActionTracker(private val project: Project): Disposable {
             override fun dispatch(e: AWTEvent): Boolean {
                 val selection = if (e is MouseEvent && e.getID() == MouseEvent.MOUSE_CLICKED) {
                     getSelectedItem(e.getComponent(), project, false)
-                }
-                else if (e is KeyEvent && e.getID() == KeyEvent.KEY_PRESSED && isContextSensitiveAction(e)) {
+                } else if (e is KeyEvent && e.getID() == KeyEvent.KEY_PRESSED && isContextSensitiveAction(e)) {
                     getSelectedItem(e.getComponent(), project, e.getKeyCode() in textEditingEvents)
-                }
-                else null
+                } else null
 
                 if (selection != null && e is InputEvent) {
                     if (actionContexts.size > 100) actionContexts.clear()
@@ -235,8 +233,7 @@ class ActionTracker(private val project: Project): Disposable {
             override fun dispatch(e: AWTEvent): Boolean {
                 if (e is MouseEvent && e.getID() == MouseEvent.MOUSE_CLICKED) {
                     processMouseClickedEvent(e)
-                }
-                else if (e is KeyEvent && e.getID() == KeyEvent.KEY_PRESSED) {
+                } else if (e is KeyEvent && e.getID() == KeyEvent.KEY_PRESSED) {
                     processKeyPressedEvent(e)
                 }
                 return false
@@ -282,8 +279,7 @@ class ActionTracker(private val project: Project): Disposable {
 
         if (plainType && !isEnter) {
             addRecord(CharTyped(e.getKeyChar()))
-        }
-        else {
+        } else {
             addRecord(KeyStrokePressed(KeyStroke.getKeyStrokeForEvent(e)), e)
         }
     }

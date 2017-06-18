@@ -10,7 +10,7 @@ class StartStopTrackingAction : DumbAwareAction("Start/Stop Tracking") {
     override fun actionPerformed(e: AnActionEvent) {
         val service = e.getProject()?.getActionTrackingService()
         if (service == null) {
-            return;
+            return
         } else if (service.activeTracker != null) {
             service.stopTracking()
         } else {

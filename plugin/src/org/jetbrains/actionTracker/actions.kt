@@ -16,23 +16,23 @@ interface ActionData
 
 class ActionRecord(val timestamp: Long, val action: ActionData)
 
-class CharTyped(val char: Char): ActionData {}
+class CharTyped(val char: Char) : ActionData
 
-class ActionInvoked(val actionText: String, val source: ActionData?): ActionData
+class ActionInvoked(val actionText: String, val source: ActionData?) : ActionData
 
-class ContextSensitiveActionInvoked(val selection: String, val source: ActionData): ActionData
+class ContextSensitiveActionInvoked(val selection: String, val source: ActionData) : ActionData
 
 private fun getWindow(c: Component) = if (c is Window) c else SwingUtilities.getWindowAncestor(c)
 
-class MouseClicked(e: MouseEvent): ActionData {
+class MouseClicked(e: MouseEvent) : ActionData {
     val dialogTitle = (getWindow(e.getComponent()) as? JDialog)?.getTitle() ?: null
 }
 
-class KeyStrokePressed(val keyStroke: KeyStroke): ActionData {
+class KeyStrokePressed(val keyStroke: KeyStroke) : ActionData {
     fun getKeystrokeText(): String = KeymapUtil.getKeystrokeText(keyStroke)
 }
 
-class NextTask: ActionData {}
+class NextTask : ActionData {}
 
 fun ActionData.toPresentableText(): String = when (this) {
     is CharTyped -> "typed '$char'"

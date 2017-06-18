@@ -20,9 +20,9 @@
   <actions>
     <group>
       <action class="org.jetbrains.actionTracker.StartStopTrackingAction" id="action.tracker.StartStopTracking" text="Start/Stop Tracking"/>
-      <action class="org.jetbrains.actionTracker.NextTaskAction" id="action.tracker.NextTask" text="Start Next Task">
-        <keyboard-shortcut first-keystroke="ctrl shift p" keymap="$default"/>
-      </action>
+      <!--<action class="org.jetbrains.actionTracker.NextTaskAction" id="action.tracker.NextTask" text="Start Next Task">-->
+        <!--<keyboard-shortcut first-keystroke="ctrl shift p" keymap="$default"/>-->
+      <!--</action>-->
       <add-to-group group-id="ToolsMenu" anchor="last"/>
     </group>
   </actions>
