@@ -71,7 +71,7 @@ class ActionTrackingService(private val project: Project) {
             Disposer.dispose(tracker)
             activeTracker = null
             val productPrefix = ApplicationNamesInfo.getInstance().getFullProductName().replace(' ', '_')
-            val time = tracker.getStartTrackingTime().replace("[\\.,: ]", "_", false)
+            val time = tracker.getStartTrackingTimeForFileName()
             val file = File(SystemProperties.getUserHome(), "${productPrefix}_action_tracker_$time.txt")
             file.writeText(records)
             val message = "Actions log saved to <a href=\"file\">${file.getAbsolutePath()}</a>"
@@ -295,6 +295,10 @@ class ActionTracker(private val project: Project) : Disposable {
     }
 
     fun getStartTrackingTime(): String {
-        return SimpleDateFormat("dd.MM.yyyy, HH:mm").format(Date(startTime))
+        return SimpleDateFormat("yyyy.MM.dd HH:mm").format(Date(startTime))
+    }
+
+    fun getStartTrackingTimeForFileName(): String {
+        return SimpleDateFormat("yyyy_MM_dd_HH_mm").format(Date(startTime))
     }
 }
