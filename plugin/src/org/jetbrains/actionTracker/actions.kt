@@ -32,7 +32,7 @@ class KeyStrokePressed(val keyStroke: KeyStroke) : ActionData {
     fun getKeystrokeText(): String = KeymapUtil.getKeystrokeText(keyStroke)
 }
 
-class NextTask : ActionData {}
+class NextTask : ActionData
 
 fun ActionData.toPresentableText(): String = when (this) {
     is CharTyped -> "typed '$char'"
@@ -48,5 +48,14 @@ fun ActionData.toPresentableText(): String = when (this) {
     }
     is ContextSensitiveActionInvoked -> "${source.toPresentableText()} on '$selection'"
     is NextTask -> ">>> Next Task <<<"
+    else -> "unknown"
+}
+
+fun ActionData.getActionText(): String = when (this) {
+    is CharTyped -> "typed"
+    is MouseClicked -> "mouse click"
+    is KeyStrokePressed -> "key stroke"
+    is ActionInvoked -> actionText
+    is ContextSensitiveActionInvoked -> selection
     else -> "unknown"
 }

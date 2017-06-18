@@ -67,7 +67,7 @@ class ActionTrackingService(private val project: Project) {
     fun stopTracking() {
         val tracker = activeTracker
         if (tracker != null) {
-            val records = tracker.exportRecords()
+            /*val records = tracker.exportRecords()
             Disposer.dispose(tracker)
             activeTracker = null
             val productPrefix = ApplicationNamesInfo.getInstance().getFullProductName().replace(' ', '_')
@@ -79,7 +79,12 @@ class ActionTrackingService(private val project: Project) {
                 if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                     ShowFilePathAction.openFile(file)
                 }
-            })
+            })*/
+
+            Disposer.dispose(tracker)
+            activeTracker = null
+            val message = "수고하셨습니다"
+            Notifications.Bus.notify(Notification("Action Tracker", "Action Tracker", message, NotificationType.INFORMATION))
         }
     }
 }
@@ -182,6 +187,9 @@ class ActionTracker(private val project: Project) : Disposable {
     private val actionRecords = ArrayList<ActionRecord>()
     private val startTime = System.currentTimeMillis()
 
+    private val simpleActionContexts = HashMap<String, Int>()
+    private var lastSendTime = System.currentTimeMillis()
+
     override fun dispose() {
     }
 
@@ -189,9 +197,25 @@ class ActionTracker(private val project: Project) : Disposable {
         addRecord(NextTask())
     }
 
+    /**
+     * 데이터가 쌓이는 부분
+     */
     private fun addRecord(actionData: ActionData) {
-        actionRecords.add(ActionRecord(System.currentTimeMillis(), actionData))
         //println(actionData.toPresentableText())
+        //actionRecords.add(ActionRecord(System.currentTimeMillis(), actionData)) // Legacy
+
+        lastSendTime = System.currentTimeMillis()
+
+        if (simpleActionContexts.contains(actionData.getActionText())) {
+            simpleActionContexts.put(actionData.getActionText(), simpleActionContexts.getValue(actionData.getActionText()) + 1)
+        } else {
+            simpleActionContexts.put(actionData.getActionText(), 1)
+        }
+
+        // TODO
+        // Check 5m
+        // init time
+        // Call API - safe
     }
 
     fun start() {
