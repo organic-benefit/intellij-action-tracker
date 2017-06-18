@@ -204,18 +204,20 @@ class ActionTracker(private val project: Project) : Disposable {
         //println(actionData.toPresentableText())
         //actionRecords.add(ActionRecord(System.currentTimeMillis(), actionData)) // Legacy
 
-        lastSendTime = System.currentTimeMillis()
-
         if (simpleActionContexts.contains(actionData.getActionText())) {
             simpleActionContexts.put(actionData.getActionText(), simpleActionContexts.getValue(actionData.getActionText()) + 1)
         } else {
             simpleActionContexts.put(actionData.getActionText(), 1)
         }
 
-        // TODO
-        // Check 5m
-        // init time
-        // Call API - safe
+        val sendTime = System.currentTimeMillis()
+        //if (sendTime - lastSendTime > 300000) { // TODO Change to interval time(5M)
+        if (sendTime - lastSendTime > 6000) {
+            // Is it thread safe?
+            lastSendTime = sendTime
+            ActionDataSender.send(simpleActionContexts)
+            simpleActionContexts.clear()
+        }
     }
 
     fun start() {
