@@ -33,14 +33,9 @@ import javax.swing.JTree
 import javax.swing.JList
 import javax.swing.JTable
 import com.intellij.ui.treeStructure.treetable.TreeTable
-import java.io.File
-import com.intellij.util.SystemProperties
-import com.intellij.openapi.application.ApplicationNamesInfo
 import com.intellij.notification.Notifications
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationType
-import com.intellij.ide.actions.ShowFilePathAction
-import javax.swing.event.HyperlinkEvent
 import com.intellij.openapi.actionSystem.PlatformDataKeys
 import java.awt.Component
 import com.intellij.openapi.ui.popup.JBPopup
