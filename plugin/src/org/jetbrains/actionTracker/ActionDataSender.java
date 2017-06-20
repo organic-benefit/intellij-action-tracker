@@ -11,8 +11,8 @@ import java.util.Map;
  * Created by kim on 2017-06-18.
  */
 public class ActionDataSender {
-    private static final String SEND_API_ADDRESS = "http://근육.net";
-    private static final String SEND_API_PATH = "/yat";
+    private static final String SEND_API_ADDRESS = "http://13.124.57.236";
+    private static final String SEND_API_PATH = "/api";
     private static final int SEND_API_FAIL = -1;
 
     public static int send(Map<String, Integer> data) {
@@ -25,12 +25,12 @@ public class ActionDataSender {
         HttpURLConnection con = null;
 
         try {
-            URL url = new URL(SEND_API_ADDRESS);
+            URL url = new URL(SEND_API_ADDRESS + SEND_API_PATH);
             con = (HttpURLConnection) url.openConnection();
             con.setConnectTimeout(3000);
             con.setReadTimeout(3000);
             con.setRequestMethod("POST");
-            con.setRequestProperty("content-type", "application/json");
+            con.setRequestProperty("content-type", "application/json;charset=utf-8");
             con.setDoOutput(true); //use post mode
 
             ps = new PrintStream(con.getOutputStream());
@@ -42,6 +42,7 @@ public class ActionDataSender {
         } finally {
             ps.close();
             con.disconnect();
+            System.out.println("response:" + responseCode);
             return responseCode;
         }
     }
@@ -52,6 +53,7 @@ public class ActionDataSender {
             json.put("action", entry.getKey());
             json.put("count", entry.getValue());
         }
+        System.out.println("send:" + json.toString());
         return json.toString();
     }
 }
