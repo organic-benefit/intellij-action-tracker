@@ -199,6 +199,7 @@ class ActionTracker(private val project: Project) : Disposable {
         //println(actionData.toPresentableText())
         //actionRecords.add(ActionRecord(System.currentTimeMillis(), actionData)) // Legacy
 
+        //println(actionData)
         if (simpleActionContexts.contains(actionData.getActionText())) {
             simpleActionContexts.put(actionData.getActionText(), simpleActionContexts.getValue(actionData.getActionText()) + 1)
         } else {

@@ -42,7 +42,7 @@ public class ActionDataSender {
         } finally {
             ps.close();
             con.disconnect();
-            System.out.println("response:" + responseCode);
+            //System.out.println("response:" + responseCode);
             return responseCode;
         }
     }
@@ -54,7 +54,7 @@ public class ActionDataSender {
             json.put("cnt", entry.getValue());
             json.put("current_dt", System.currentTimeMillis());
         }
-        System.out.println("send:" + json.toString());
+        //System.out.println("send:" + json.toString());
         return json.toString();
     }
 }

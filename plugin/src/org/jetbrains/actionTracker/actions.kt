@@ -56,6 +56,6 @@ fun ActionData.getActionText(): String = when (this) {
     is MouseClicked -> "mouse click"
     is KeyStrokePressed -> "key stroke"
     is ActionInvoked -> actionText
-    is ContextSensitiveActionInvoked -> selection
+    is ContextSensitiveActionInvoked -> "select item"
     else -> "unknown"
 }
