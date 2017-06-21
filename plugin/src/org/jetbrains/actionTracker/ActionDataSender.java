@@ -50,8 +50,8 @@ public class ActionDataSender {
     private static String mapTojson(Map<String, Integer> map) throws Exception {
         JSONObject json = new JSONObject();
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
-            json.put("action", entry.getKey());
-            json.put("count", entry.getValue());
+            json.put("action_type", entry.getKey());
+            json.put("cnt", entry.getValue());
         }
         System.out.println("send:" + json.toString());
         return json.toString();
