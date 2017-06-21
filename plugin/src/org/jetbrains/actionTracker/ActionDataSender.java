@@ -52,6 +52,7 @@ public class ActionDataSender {
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
             json.put("action_type", entry.getKey());
             json.put("cnt", entry.getValue());
+            json.put("current_dt", System.currentTimeMillis());
         }
         System.out.println("send:" + json.toString());
         return json.toString();
