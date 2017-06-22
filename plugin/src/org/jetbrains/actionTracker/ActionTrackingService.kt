@@ -207,8 +207,8 @@ class ActionTracker(private val project: Project) : Disposable {
         }
 
         val sendTime = System.currentTimeMillis()
-        if (sendTime - lastSendTime > 300000) {
-        //if (sendTime - lastSendTime > 5000) { // TODO To debug
+        //if (sendTime - lastSendTime > 300000) { // 5m
+        if (sendTime - lastSendTime > 60000) { // TODO To debug
             // Is it thread safe?
             lastSendTime = sendTime
             ActionDataSender.send(simpleActionContexts)
